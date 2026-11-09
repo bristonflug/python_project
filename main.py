@@ -1,8 +1,36 @@
-inventory = {
-    "burger": {"price": 9.50, "qty": 30, "reorder": 10},
-    "fries": {"price": 3.50, "qty": 25, "reorder": 8},
-    "chicken sandwich": {"price": 8.50, "qty": 20, "reorder": 6}
-}
+import csv
+
+def load_inventory():
+    inventory = {}
+
+    with open("inventory.csv", "r", newline="") as file:
+        reader = csv.reader(file)
+        next(reader)
+
+        for row in reader:
+            item = row[0]
+            inventory[item] = {
+                "price": float(row[1]),
+                "qty": int(row[2]),
+                "reorder": int(row[3])
+            }
+
+    return inventory
+
+
+def save_inventory(inventory):
+    with open("inventory.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["item", "price", "qty", "reorder"])
+
+        for item in inventory:
+            details = inventory[item]
+            writer.writerow([
+                item,
+                details["price"],
+                details["qty"],
+                details["reorder"]
+            ])
 
 
 def view_inventory():
@@ -86,6 +114,8 @@ def add_item():
         print("Added", item, "to inventory.")
 
 
+inventory = load_inventory()
+
 choice = ""
 
 while choice != "7":
@@ -93,7 +123,8 @@ while choice != "7":
     choice = input("Choose an option: ").strip()
 
     if choice == "7":
-        print("Goodbye!")
+        save_inventory(inventory)
+        print("Inventory saved. Goodbye!")
     elif choice == "1":
         view_inventory()
     elif choice == "2":
