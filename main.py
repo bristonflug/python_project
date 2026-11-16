@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 
 def load_inventory():
     inventory = {}
@@ -264,10 +265,77 @@ def show_report(sales):
     for item in units_by_item:
         print(item, "-", units_by_item[item], "units")
 
+
+def group_units_by_day(sales):
+    totals = {}
+
+    for sale in sales:
+        date = sale["date"]
+
+        if date not in totals:
+            totals[date] = 0
+
+        totals[date] = totals[date] + sale["qty"]
+
+    return totals
+
+
+def show_charts(sales):
+    if len(sales) == 0:
+        print("No sales recorded yet. Record a sale first.")
+        return
+
+    units_by_item = group_units_by_item(sales)
+    items = []
+    item_units = []
+
+    for item in units_by_item:
+        items.append(item)
+        item_units.append(units_by_item[item])
+
+    plt.figure()
+    plt.bar(items, item_units)
+    plt.title("The Grill - Units Sold by Item")
+    plt.xlabel("Menu item")
+    plt.ylabel("Units sold")
+    plt.xticks(rotation=30)
+    plt.tight_layout()
+    plt.savefig("units_by_item.png")
+    plt.show()
+    plt.close()
+
+    units_by_day = group_units_by_day(sales)
+    dates = []
+
+    for date in units_by_day:
+        dates.append(date)
+
+    dates.sort()
+    daily_units = []
+
+    for date in dates:
+        daily_units.append(units_by_day[date])
+
+    plt.figure()
+    plt.plot(dates, daily_units, marker="o")
+    plt.title("The Grill - Units Sold by Day")
+    plt.xlabel("Date")
+    plt.ylabel("Units sold")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig("units_by_day.png")
+    plt.show()
+    plt.close()
+
+    print("Saved units_by_item.png and units_by_day.png")
+
+
 inventory = load_inventory()
 sales = load_sales()
 
+
 choice = ""
+
 while choice != "7":
     show_menu()
     choice = input("Choose an option: ").strip()
@@ -278,14 +346,18 @@ while choice != "7":
         add_item()
     elif choice == "3":
         record_sale(inventory, sales)
+    elif choice == "4":
+        print("Coming soon")
     elif choice == "5":
         show_report(sales)
-    elif choice in ["4", "6"]:
+    elif choice == "6":
         print("Coming soon")
     elif choice == "7":
         save_inventory(inventory)
         save_sales(sales)
         print("Inventory and sales saved. Goodbye!")
+    elif choice == "8":
+        show_charts(sales)
     else:
-        print("Please choose a number from 1 to 7.")
+        print("Please choose a number from 1 to 8.")
 
