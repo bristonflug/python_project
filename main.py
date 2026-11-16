@@ -212,6 +212,58 @@ def record_sale(inventory, sales):
     sales.append(sale)
     print("Sale recorded. Total ($):", total)
 
+def group_units_by_item(sales):
+    totals = {}
+
+    for sale in sales:
+        item = sale["item"]
+
+        if item not in totals:
+            totals[item] = 0
+
+        totals[item] = totals[item] + sale["qty"]
+
+    return totals
+
+
+def show_report(sales):
+    if len(sales) == 0:
+        print("No sales recorded yet.")
+        return
+
+    total_units = 0
+    total_revenue = 0
+
+    for sale in sales:
+        total_units = total_units + sale["qty"]
+        total_revenue = total_revenue + sale["total"]
+
+    average_sale = total_revenue / len(sales)
+    units_by_item = group_units_by_item(sales)
+
+    highest_units = 0
+
+    for item in units_by_item:
+        if units_by_item[item] > highest_units:
+            highest_units = units_by_item[item]
+
+    print("\n--- Sales Report ---")
+    print("Sales recorded:", len(sales))
+    print("Total units sold:", total_units)
+    print("Total revenue ($):", round(total_revenue, 2))
+    print("Average sale amount ($):", round(average_sale, 2))
+
+    print("\nBest-selling item(s):")
+
+    for item in units_by_item:
+        if units_by_item[item] == highest_units:
+            print(item, "-", highest_units, "units")
+
+    print("\nUnits sold by item:")
+
+    for item in units_by_item:
+        print(item, "-", units_by_item[item], "units")
+
 inventory = load_inventory()
 sales = load_sales()
 
@@ -226,7 +278,9 @@ while choice != "7":
         add_item()
     elif choice == "3":
         record_sale(inventory, sales)
-    elif choice in ["4", "5", "6"]:
+    elif choice == "5":
+        show_report(sales)
+    elif choice in ["4", "6"]:
         print("Coming soon")
     elif choice == "7":
         save_inventory(inventory)
