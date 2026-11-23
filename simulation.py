@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 DAYS = 30                   
 MIN_DEMAND = 5              
@@ -27,7 +28,6 @@ def simulate_month(reorder_level):
 
     return shortage_days
 
-# Run many months and return the average number of shortage days.
 def average_shortage_days(reorder_level, trials):
     total_shortage_days = 0
 
@@ -67,4 +67,16 @@ def run_simulation():
         print("\nRecommendation: reorder when burger stock reaches",
               recommended, "or fewer.")
         print("This is the lowest tested level that met the shortage target.")
+    plt.figure()
+    plt.bar(REORDER_LEVELS, results)
+    plt.title("The Grill - Burger Reorder Levels")
+    plt.xlabel("Reorder level (burgers remaining)")
+    plt.ylabel("Average shortage days per 30-day month")
+    plt.xticks(REORDER_LEVELS)
+    plt.tight_layout()
+    plt.savefig("simulation_results.png")
+    plt.show()
+    plt.close()
+
+    print("Saved simulation_results.png")
 

@@ -23,7 +23,7 @@ Install matplotlib once using `py -m pip install matplotlib`.
 3. Record a sale
 4. Show low-stock alerts — coming soon
 5. Sales report
-6. Run 30-day simulation — coming soon
+6. Run 30-day simulation 
 7. Save and exit
 8. Show sales charts
 
@@ -35,6 +35,8 @@ Install matplotlib once using `py -m pip install matplotlib`.
 - `sales.csv` — stores recorded sales.
 - `units_by_item.png` — bar chart showing units sold by menu item.
 - `units_by_day.png` — line chart showing units sold by recorded date.
+- `simulation.py` — compares burger reorder levels using random daily demand.
+- `simulation_results.png` — shows average shortage days for each reorder level.
 
 ## Charts
 ![Units sold by menu item](units_by_item.png)
@@ -43,6 +45,30 @@ the manager decide which items need closer inventory monitoring.
 ![Units sold by recorded date](units_by_day.png)
 This chart shows changes in sales volume across recorded dates, helping
 the manager plan stock for busier periods.
+
+## Simulation
+
+### Business Question
+At what stock level should we reorder burgers so we rarely run out?
+
+### How It Works
+I tested reorder levels of 5, 10, 15, 20, and 25 burgers. Each simulated
+month starts with 30 burgers and lasts 30 days. Daily demand is a random
+whole number from 5 to 20.
+
+If closing stock is at or below the reorder level, a delivery of 30 burgers
+arrives the next morning. A shortage day is a day when demand exceeds the
+available stock. Unfilled demand is lost.
+
+For each reorder level, the program simulates 1,000 months and calculates
+the average number of shortage days. The target is fewer than 0.5 shortage
+days per month.
+
+### Results
+![Burger reorder simulation results](simulation_results.png)
+
+The chart compares average shortage days for each tested reorder level.
+Lower bars mean fewer days with unfilled demand.
 
 ## Author
 Briston Flug
