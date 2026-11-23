@@ -1,5 +1,6 @@
 import inventory
 import reports
+import simulation
 
 def show_menu():
     print("\nThe Grill - Sales and Inventory Manager")
@@ -32,7 +33,7 @@ while choice != "7":
     elif choice == "5":
         reports.show_report(sales)
     elif choice == "6":
-        print("Coming soon")
+        simulation.run_simulation()
     elif choice == "7":
         inventory.save_inventory(items)
         inventory.save_sales(sales)

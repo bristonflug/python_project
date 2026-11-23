@@ -26,3 +26,45 @@ def simulate_month(reorder_level):
             stock = stock - demand
 
     return shortage_days
+
+# Run many months and return the average number of shortage days.
+def average_shortage_days(reorder_level, trials):
+    total_shortage_days = 0
+
+    for trial in range(trials):
+        total_shortage_days = total_shortage_days + simulate_month(reorder_level)
+
+    return total_shortage_days / trials
+
+
+def run_simulation():
+    results = []
+
+    print("\n--- Burger Reorder Simulation ---")
+    print("Months simulated per reorder level:", TRIALS)
+    print("Days per month:", DAYS)
+    print("Daily demand:", MIN_DEMAND, "to", MAX_DEMAND)
+    print("Restock amount:", RESTOCK_AMOUNT)
+    print("Target: fewer than", SHORTAGE_TARGET, "shortage days per month")
+
+    print("\nReorder level    Average shortage days per month")
+
+    for reorder_level in REORDER_LEVELS:
+        average = average_shortage_days(reorder_level, TRIALS)
+        results.append(average)
+        print(reorder_level, "               ", round(average, 3))
+
+    recommended = 0
+
+    for i in range(len(REORDER_LEVELS)):
+        if results[i] < SHORTAGE_TARGET and recommended == 0:
+            recommended = REORDER_LEVELS[i]
+
+    if recommended == 0:
+        print("\nNone of the tested levels met the shortage target.")
+        print("Test higher reorder levels or larger deliveries.")
+    else:
+        print("\nRecommendation: reorder when burger stock reaches",
+              recommended, "or fewer.")
+        print("This is the lowest tested level that met the shortage target.")
+
